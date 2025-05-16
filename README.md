@@ -90,8 +90,8 @@ class Usuario {
   - foto : String
   - postagens : List<Postagem>
 }
-Tema "1" --> "0..*" Postagem : classifica
-Usuario "1" --> "0..*" Postagem : cria
+Tema --> Postagem : classifica
+Usuario --> Postagem : cria
 
 ```
 
@@ -107,7 +107,7 @@ O **DER (Diagrama Entidade-Relacionamento)** do projeto **Blog Pessoal** represe
 
 ```mermaid
 erDiagram
-    tb_usuarios ||--o{ tb_postagens : escreve
+    tb_usuarios ||--o{ tb_postagens : cria
     tb_temas ||--o{ tb_postagens : classifica
     tb_usuarios {
         bigint id PK
