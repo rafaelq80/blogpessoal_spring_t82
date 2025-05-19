@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -21,9 +22,11 @@ public class Postagem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT
 	private Long id;
 	
+	
 	@Column(length = 100)
 	@NotBlank(message = "O atributo título é obrigatório!")
 	@Size(min = 5, max = 100, message = "O atributo título deve ter no minimo 5 e no máximo 100 caracteres.")
+	@Pattern(regexp = "^[^0-9].*", message = "O título não pode ser apenas numérico")
 	private String titulo;
 	
 	@Column(length = 1000)
