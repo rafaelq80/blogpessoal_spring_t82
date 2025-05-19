@@ -32,6 +32,7 @@ public class Postagem {
 	@Column(length = 1000)
 	@NotBlank(message = "O atributo texto é obrigatório!")
 	@Size(min = 10, max = 1000, message = "O atributo texto deve ter no minimo 10 e no máximo 1000 caracteres.")
+	@Pattern(regexp = "^[^0-9].*", message = "O título não pode ser apenas numérico")
 	private String texto;
 	
 	@UpdateTimestamp
