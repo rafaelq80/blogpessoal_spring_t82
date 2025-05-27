@@ -7,8 +7,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -19,12 +21,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.generation.blogpessoal.model.Usuario;
+import com.generation.blogpessoal.model.UsuarioLogin;
 import com.generation.blogpessoal.repository.UsuarioRepository;
 import com.generation.blogpessoal.service.UsuarioService;
 import com.generation.blogpessoal.util.TestBuilder;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public class UsuarioControllerTest {
 
 	@Autowired
@@ -47,7 +51,7 @@ public class UsuarioControllerTest {
 	}
 	
 	@Test
-	@DisplayName("✔ Deve cadastrar um novo usuário com sucesso")
+	@DisplayName("✔ 01- Deve cadastrar um novo usuário com sucesso")
 	public void deveCadastrarUsuario() {
 		
 		//Given
@@ -65,7 +69,7 @@ public class UsuarioControllerTest {
 	}
 	
 	@Test
-	@DisplayName("✔ Não Deve permitir a duplicação do usuário")
+	@DisplayName("✔ 02 - Não Deve permitir a duplicação do usuário")
 	public void naoDeveDuplicarUsuario() {
 		
 		//Given
@@ -83,7 +87,7 @@ public class UsuarioControllerTest {
 	}
 	
 	@Test
-	@DisplayName("✔ Deve atualizar os dados de um usuário com sucesso")
+	@DisplayName("✔ 03 - Deve atualizar os dados de um usuário com sucesso")
 	public void deveAtualizarUmUsuario() {
 		
 		//Given
@@ -106,7 +110,7 @@ public class UsuarioControllerTest {
 	}
 	
 	@Test
-	@DisplayName("✔ Deve listar todos os usuários com sucesso")
+	@DisplayName("✔ 04 - Deve listar todos os usuários com sucesso")
 	public void deveListarTodosUsuarios() {
 		
 		//Given
@@ -122,4 +126,37 @@ public class UsuarioControllerTest {
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
 		assertNotNull(resposta.getBody());
 	}
+	
+	@Test
+	@DisplayName("✔ 05 - Deve listar um usuário específico - pelo id")
+	public void deveListarUmUsuarioPorId() {
+		var usuario = usuarioService.cadastrarUsuario(TestBuilder.criarUsuario(null, "Ana Paula", "ana_paula@email.com", "senha123"));
+
+		var id = usuario.get().getId();
+		
+		ResponseEntity<Usuario> resposta = testRestTemplate
+				.withBasicAuth(USUARIO_ROOT_EMAIL, USUARIO_ROOT_SENHA)
+				.exchange(BASE_URL_USUARIOS + "/" + id, HttpMethod.GET, null, Usuario.class);
+
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		assertNotNull(resposta.getBody());
+	}
+	
+	@Test
+	@DisplayName("✔ 06 - Deve Autenticar um usuário com sucesso")
+	public void deveAutenticarUsuario() {
+		
+		usuarioService.cadastrarUsuario(TestBuilder.criarUsuario(null, "Márcia Marques", "marcia_marques@email.com.br", "13465278"));
+		
+		UsuarioLogin usuarioLogin = TestBuilder.criarUsuarioLogin("marcia_marques@email.com.br", "13465278");
+		HttpEntity<UsuarioLogin> requisicao = new HttpEntity<>(usuarioLogin);
+
+		ResponseEntity<UsuarioLogin> resposta = testRestTemplate.exchange(
+				BASE_URL_USUARIOS + "/logar", HttpMethod.POST, requisicao, UsuarioLogin.class);
+
+		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+		assertEquals("Márcia Marques", resposta.getBody().getNome());
+		assertEquals("marcia_marques@email.com.br", resposta.getBody().getUsuario());
+	}
+	
 }

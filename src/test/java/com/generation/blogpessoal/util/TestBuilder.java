@@ -1,6 +1,7 @@
 package com.generation.blogpessoal.util;
 
 import com.generation.blogpessoal.model.Usuario;
+import com.generation.blogpessoal.model.UsuarioLogin;
 
 public class TestBuilder {
 
@@ -13,6 +14,17 @@ public class TestBuilder {
 		usuario.setFoto("-");
 		return usuario;
 	}
+	
+	public static UsuarioLogin criarUsuarioLogin(String email, String senha) {
+        UsuarioLogin usuarioLogin = new UsuarioLogin();
+        usuarioLogin.setId(null);
+        usuarioLogin.setNome("");
+        usuarioLogin.setUsuario(email);
+        usuarioLogin.setSenha(senha);
+        usuarioLogin.setFoto("");
+        usuarioLogin.setToken("");
+        return usuarioLogin;
+    }
 	
 	public static Usuario criarUsuarioRoot() {
 		return criarUsuario(null, "Root", "root@email.com", "rootroot");
