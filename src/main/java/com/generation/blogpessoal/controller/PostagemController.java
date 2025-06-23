@@ -82,6 +82,8 @@ public class PostagemController {
 			 * inseridos nos respectivos atributos do objeto postagem, parâmetro do método
 			 * post.
 			 */
+			
+			postagem.setId(null);
 			return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
 		}
 		
