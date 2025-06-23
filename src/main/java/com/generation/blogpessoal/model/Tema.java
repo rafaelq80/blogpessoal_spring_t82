@@ -2,7 +2,6 @@ package com.generation.blogpessoal.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -32,7 +31,6 @@ public class Tema {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("tema")
-	@JsonIgnore
 	private List<Postagem> postagem;
 	
 	public Long getId() {
