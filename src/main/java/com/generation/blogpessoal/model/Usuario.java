@@ -2,6 +2,7 @@ package com.generation.blogpessoal.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,6 +43,7 @@ public class Usuario {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("usuario")
+	@JsonIgnore
 	private List<Postagem> postagem;
 
 	/* Insira os Getters and Setters */
